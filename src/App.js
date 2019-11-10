@@ -1,10 +1,12 @@
 import React from 'react';
 import './App.css';
+import GetLocation from './components/GetLocation'
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <h2>ATM Finder</h2>
+      <GetLocation/>
     </div>
   );
 }
