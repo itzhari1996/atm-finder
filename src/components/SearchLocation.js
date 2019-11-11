@@ -1,8 +1,16 @@
 import React from 'react'
 import Autocomplete from 'react-google-autocomplete';
+import Script from 'react-load-script';
 import '../App.css'
 
 class SearchLocation extends React.Component{
+
+    constructor(){
+        super()
+        this.state={
+            isModuleLoaded:false
+        }
+    }
 
     onPlaceSelected = (place) =>{
         const latValue = place.geometry.location.lat();
@@ -10,9 +18,15 @@ class SearchLocation extends React.Component{
         this.props.setLocation(latValue,lngValue)
     }
 
+    handleScriptLoad = ()=>{
+        this.setState({isModuleLoaded:true})
+    }
+
     render(){
         return(
-            <Autocomplete
+            <div>
+            <Script url="https://maps.googleapis.com/maps/api/js?key=AIzaSyDRjIZbJwQdGrWTqfYMgh4uojkwzF4_Wrc&libraries=places" onLoad={this.handleScriptLoad}/>
+            {this.state.isModuleLoaded && <Autocomplete
                 style={{
                     width:'50%',
                     padding:'10px',
@@ -21,7 +35,8 @@ class SearchLocation extends React.Component{
                 }}
                 onPlaceSelected={ this.onPlaceSelected }
                 types={['(regions)']}
-            />
+            />}
+            </div>
         )
     }
 }
