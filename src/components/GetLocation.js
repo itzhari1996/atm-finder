@@ -1,15 +1,19 @@
 import React from 'react'
-import axios from '../config/axios'
-import ListATM from './ListATM'
+import {Link} from 'react-router-dom'
+import SearchLocation from './SearchLocation'
+import '../App.css'
 
 class GetLocation extends React.Component{
     constructor(){
         super()
         this.state={
             latitude:undefined,
-            longitude:undefined,
-            atmNearby:undefined
+            longitude:undefined
         }
+    }
+
+    setLocation = (lat,lng) =>{
+        this.setState({latitude:lat,longitude:lng})
     }
 
     getLocation = ()=>{
@@ -24,27 +28,20 @@ class GetLocation extends React.Component{
         {timeout:40000, enableHighAccuracy:true})
     }
 
-    getAtmList=()=>{
-        const googleMapUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.state.latitude},${this.state.longitude}&type=atm&rankby=distance&key=AIzaSyDRjIZbJwQdGrWTqfYMgh4uojkwzF4_Wrc`
-        // console.log(googleMapUrl)
-        axios.get(googleMapUrl)
-        .then(response=>{
-            this.setState({atmNearby:response.data})
-        })
-        .catch(err=>{
-            window.alert(err)
-        })
-    }
+    onSuggestSelect = (suggest)=>{
+        console.log(suggest);
+      }
 
     render(){
         return(
-            <div>
-                <p>Current Latitude: {this.state.latitude}</p>
-                <p>Current Longitude: {this.state.longitude}</p>
-                <input type='text'/>
-                <button onClick={this.getLocation}>Get My Location</button><br/>
-                <button onClick = {this.getAtmList} disabled={!this.state.latitude}>Get Nearby ATM</button>
-                {this.state.atmNearby && <ListATM atm={this.state.atmNearby} location={{lat:this.state.latitude,lon:this.state.longitude}}/>}
+            <div className='locationForm'>
+                <SearchLocation setLocation={this.setLocation}/>
+                <button className='searchButton' onClick={this.getLocation}>Get My Location</button>
+                <div className='textDiv'>
+                    <p className='textContent'><b>Current Latitude: </b>{this.state.latitude}</p>
+                    <p className='textContent'><b>Current Longitude: </b>{this.state.longitude}</p>
+                </div>
+                {this.state.latitude && <Link className="link" to={{pathname:'/list', state:{lat:this.state.latitude,lng:this.state.longitude}}}>Search ATM</Link>}
             </div>
         )
     }

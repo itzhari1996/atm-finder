@@ -1,17 +1,30 @@
 import React from 'react'
-import Axios from 'axios';
+import Axios from 'axios'
+import Map from './Map'
+import '../App.css'
 
 class ListATM extends React.Component{
 
     constructor(props){
         super()
         this.state={
-            nextPageToken:props.atm.next_page_token,
-            atmList:props.atm.results,
+            atmList:[],
             currentPage:1,
+            atmMarker:undefined,
             isNextAvailable:false
         }
-        console.log(props.atm.next_page_token)
+        this.currentLocation = {lat:props.location.state.lat,lng:props.location.state.lng}
+    }
+
+    componentDidMount(){
+        const googleMapUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.currentLocation.lat},${this.currentLocation.lng}&type=atm&rankby=distance&key=AIzaSyDRjIZbJwQdGrWTqfYMgh4uojkwzF4_Wrc`
+        Axios.get(googleMapUrl)
+        .then(response=>{
+            this.setState({atmList:response.data.results,atmMarker:response.data.results[0]})
+        })
+        .catch(err=>{
+            window.alert(err)
+        })
     }
 
     distance = (lat1, lon1, lat2, lon2)=>{
@@ -34,55 +47,37 @@ class ListATM extends React.Component{
         }
     }
 
-    navigateNext=()=>{
-        if(this.state.nextPageToken){
-            const googleMapUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=${this.state.nextPageToken}&key=AIzaSyDRjIZbJwQdGrWTqfYMgh4uojkwzF4_Wrc`
-            Axios.get(googleMapUrl)
-            .then(response=>{
-                if(response.data.status === 'OK'){
-                    this.setState(prevState=>{
-                        const pageToken = response.data.next_page_token
-                        const isNextAvailable = pageToken ? false : true
-                        prevState.atmList.push(...response.data.results)
-                        return {atmList:prevState.atmList,currentPage:prevState.currentPage+1,nextPageToken:pageToken,isNextAvailable}
-                    })
-                }else{
-                    window.alert(response.data.status)
-                }
-            })
-            .catch(err=>{
-                window.alert(err)
-            })
-        }else{
-            this.setState({currentPage:this.state.currentPage+1})
-        }
-    }
-
-    navigatePrevious=()=>{
-        this.setState(prevState => {
-            return {currentPage:prevState.currentPage-1}
-        })
+    navigate=(atm)=>{
+        this.setState({atmMarker:atm})
     }
 
     render(){
         return(
-            <div>
-                <h2>Listing Nearby ATM {(this.state.currentPage-1)*20 +1} - {this.state.currentPage*20} of {this.state.atmList.length}</h2>
-                <ul>
-                    {this.state.atmList.slice((this.state.currentPage-1)*20,(this.state.currentPage-1)*20+20).map(atm=>{
+            <React.Fragment>
+            {this.state.atmList.length>0 && 
+            <div className='Main'>
+                <div id='atmList'>
+                    <h2 className='header'>Listing Nearby ATM</h2>
+                    {this.state.atmList.map(atm=>{
                         return(
-                        <li key={atm.id}>
-                            <p>Name: {atm.name}</p>
-                            <p>Address: {atm.vicinity}</p>
-                            {this.distance(this.props.location.lat,this.props.location.lon,atm.geometry.location.lat,atm.geometry.location.lng)}
-                        </li>)
+                            <div key={atm.id} className='atmItem' onClick = {(e)=>{this.navigate(atm)}}>
+                                <p>Name: {atm.name}</p>
+                                <p>Address: {atm.vicinity}</p>
+                                {this.distance(this.currentLocation.lat,this.currentLocation.lng,atm.geometry.location.lat,atm.geometry.location.lng)}
+                            </div>)
                     })}
-                </ul>
-                <button onClick ={this.navigatePrevious} disabled={this.state.currentPage <= 1}>Previous</button>&nbsp;
-                <span>{this.state.currentPage}/{Math.ceil(this.state.atmList.length/20)}</span>&nbsp;
-                <button onClick ={this.navigateNext} disabled={this.state.currentPage*20>=this.state.atmList.length}>Next</button><br/>
-                <button onClick={this.navigateNext} disabled={this.state.isNextAvailable}>Get More Results</button>
-            </div>
+                </div>
+                <div id='map'>
+                    <Map key = {this.state.atmMarker.id}
+                        currentPosition={this.currentLocation}
+                        atm={this.state.atmMarker}
+                        atmList = {this.state.atmList}
+                        height='100vh'
+                        zoom={16}
+                    />
+                </div>
+            </div>}
+            </React.Fragment>
         )
     }
 
