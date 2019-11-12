@@ -2,7 +2,6 @@ import React from 'react'
 import Autocomplete from 'react-google-autocomplete';
 import Script from 'react-load-script';
 import '../App.css'
-import googleApiKey from './Variable'
 
 class SearchLocation extends React.Component{
 
@@ -34,8 +33,8 @@ class SearchLocation extends React.Component{
 
     render(){
         return(
-            <div>
-            <Script url={`https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&libraries=places`} onLoad={this.handleScriptLoad}/>
+            <div data-testid = 'autocomplete'>
+            <Script url={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_API_KEY}&libraries=places`} onLoad={this.handleScriptLoad}/>
             {this.state.isModuleLoaded && <Autocomplete
                 style={{
                     width:'50%',

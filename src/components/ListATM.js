@@ -2,7 +2,6 @@ import React from 'react'
 import Axios from 'axios'
 import Map from './Map'
 import '../App.css'
-import googleApiKey from './Variable'
 
 class ListATM extends React.Component{
 
@@ -14,18 +13,22 @@ class ListATM extends React.Component{
             atmMarker:undefined,
             isNextAvailable:false
         }
-        this.currentLocation = {lat:props.location.state.lat,lng:props.location.state.lng}
+        if(props.location.state){
+            this.currentLocation = {lat:props.location.state.lat,lng:props.location.state.lng}
+        }
     }
 
     componentDidMount(){
-        const googleMapUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.currentLocation.lat},${this.currentLocation.lng}&type=atm&rankby=distance&key=${googleApiKey}`
-        Axios.get(googleMapUrl)
-        .then(response=>{
-            this.setState({atmList:response.data.results,atmMarker:response.data.results[0]})
-        })
-        .catch(err=>{
-            window.alert(err)
-        })
+        if(this.currentLocation){
+            const googleMapUrl = `${process.env.REACT_APP_PROXY_URL}https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.currentLocation.lat},${this.currentLocation.lng}&type=atm&rankby=distance&key=${process.env.REACT_APP_API_KEY}`
+            Axios.get(googleMapUrl)
+            .then(response=>{
+                this.setState({atmList:response.data.results,atmMarker:response.data.results[0]})
+            })
+            .catch(err=>{
+                window.alert(err)
+            })
+        }
     }
 
     distance = (lat1, lon1, lat2, lon2)=>{

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withGoogleMap, GoogleMap, withScriptjs, InfoWindow, Marker } from "react-google-maps";
-import googleApiKey from './Variable'
 
 class Map extends React.Component{
 
@@ -65,7 +64,7 @@ class Map extends React.Component{
         if( this.state.lat !== undefined ) {
             map = <div>
                 <AsyncMap
-                    googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${googleApiKey}&libraries=places`}
+                    googleMapURL={`${process.env.REACT_APP_PROXY_URL}/https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_API_KEY}&libraries=places`}
                     loadingElement={
                         <div style={{ height: `100%` }} />
                     }

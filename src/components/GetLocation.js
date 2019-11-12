@@ -34,10 +34,10 @@ class GetLocation extends React.Component{
 
     render(){
         return(
-            <div className='locationForm'>
+            <div className='locationForm' data-testid='getlocation'>
                 <SearchLocation setLocation={this.setLocation}/>
-                <button className='searchButton' onClick={this.getLocation}>Get My Location</button>
-                <div className='textDiv'>
+                <button type='button' className='searchButton' data-testid='getlocationButton' onClick={this.getLocation}>Get My Location</button>
+                <div className='textDiv' data-testid='textdiv'>
                     <p className='textContent'><b>Current Latitude: </b>{this.state.latitude}</p>
                     <p className='textContent'><b>Current Longitude: </b>{this.state.longitude}</p>
                 </div>
