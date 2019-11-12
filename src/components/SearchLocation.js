@@ -14,13 +14,22 @@ class SearchLocation extends React.Component{
     }
 
     onPlaceSelected = (place) =>{
-        const latValue = place.geometry.location.lat();
-        const lngValue = place.geometry.location.lng();
-        this.props.setLocation(latValue,lngValue)
+        if(place.geometry){
+            const latValue = place.geometry.location.lat();
+            const lngValue = place.geometry.location.lng();
+            if(latValue){this.props.setLocation(latValue,lngValue)}
+        }else{alert('Please select a valid location')}   
     }
 
     handleScriptLoad = ()=>{
         this.setState({isModuleLoaded:true})
+    }
+    
+    onKeyDown = (key)=>{
+        if(key.keyCode === 13){
+            key.preventDefault()
+            console.log('enter key')
+        }
     }
 
     render(){
@@ -35,7 +44,6 @@ class SearchLocation extends React.Component{
                     borderRadius:'10px'
                 }}
                 onPlaceSelected={ this.onPlaceSelected }
-                types={['(regions)']}
             />}
             </div>
         )
