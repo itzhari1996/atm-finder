@@ -110,12 +110,12 @@ body{
 .link{
   position:relative;
   display:block;
-  width:10%;
+  width:8vw;
+  margin:auto;
   text-decoration: none;
   background-color: whitesmoke;
   padding:10px;
   border-radius: 10px;
   bottom:-5vh;
-  left:40vw;
   color:black;
 }
