@@ -28,10 +28,6 @@ class GetLocation extends React.Component{
         {timeout:40000, enableHighAccuracy:true})
     }
 
-    onSuggestSelect = (suggest)=>{
-        console.log(suggest);
-      }
-
     render(){
         return(
             <div className='locationForm' data-testid='getlocation'>

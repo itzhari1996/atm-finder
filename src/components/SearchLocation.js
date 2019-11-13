@@ -42,6 +42,8 @@ class SearchLocation extends React.Component{
                     margin:'30px',
                     borderRadius:'10px'
                 }}
+                types={['(regions)']}
+                componentRestrictions={{country: "in"}}
                 onPlaceSelected={ this.onPlaceSelected }
             />}
             </div>

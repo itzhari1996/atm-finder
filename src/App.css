@@ -18,7 +18,7 @@ body{
 }
 
 #atmList{
-  background-color:rgba(50, 50,50, 0.7);
+  background-color:rgb(95, 95, 95);
   width:25vw;
   overflow-y: scroll; 
   height: 100vh;
@@ -55,7 +55,8 @@ body{
   display:flex;
   align-items: center;
   justify-content:space-between;
-  background-color:darkslateblue
+  background-color:rgb(16,1,80);
+  ;
 }
 
 .appHeader{
@@ -83,7 +84,10 @@ body{
 .locationForm{
   padding:50px;
   text-align: center;
-  background-color:rgba(100, 100, 100, 0.8);
+  width:50vw;
+  margin:auto;
+  border-radius: 20px;
+  background-color:rgba(16,1,80,0.85);
   height: 50vh;
   margin-top: 20vh;
 }
@@ -98,24 +102,19 @@ body{
   color:white;
   padding:15px;
   margin:15px;
-  display: inline;
 }
 
 .textDiv{
-  left:10px;
-  top:10px;
-  padding:20px;
+  display:flex;
+  justify-content: space-between;
+  padding:10px;
 }
 
 .link{
-  position:relative;
-  display:block;
-  width:8vw;
   margin:auto;
   text-decoration: none;
   background-color: whitesmoke;
   padding:10px;
   border-radius: 10px;
-  bottom:-5vh;
   color:black;
 }
